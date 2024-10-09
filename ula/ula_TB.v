@@ -28,7 +28,7 @@ module ula_TB ();
     $display("\n### Test: not");
     $display("--------------------------------------------------------------------------------");
     op = 8'd0;
-    a = 8'bxxxx_xxxx;
+    a = 8'd255;
     b = 8'd0;
     expected = 8'd255;
     `ASSERT(result, expected);
@@ -220,5 +220,6 @@ module ula_TB ();
     b = 8'd2;
     expected = 8'd63;
     `ASSERT(result, expected);
+  end
 endmodule
 ;
