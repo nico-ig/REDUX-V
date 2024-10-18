@@ -1,33 +1,35 @@
 `include "utils.vh"
 
-`timescale 1ns / 1ps
-
 module ula_TB ();
-  reg  [`BITS-1:0] a;
-  reg  [`BITS-1:0] b;
-  reg  [  `OP-1:0] op;
-  wire [`BITS-1:0] result;
-  reg  [`BITS-1:0] expected;
+  reg  [  `BITS-1:0] a;
+  reg  [  `BITS-1:0] b;
+  reg  [`ULA_OP-1:0] ula_op;
+  wire [  `BITS-1:0] result;
+  reg  [  `BITS-1:0] expected;
 
   initial begin
     $dumpfile("ula.vcd");
     $dumpvars(0, ula_TB);
   end
 
-  ula DUT (
+  ula #(
+      .ULA_OP(3),
+      .BITS  (8)
+  ) DUT (
       .a_in(a),
       .b_in(b),
-      .op_in(op),
+      .ula_op_in(ula_op),
       .result_out(result)
   );
 
   initial begin
-    $monitor("\ttime=%3d, op=0x%02H, a=0x%02H, b=0x%02H, result=0x%02H, expected=0x%02H", $time,
-             op, a, b, result, expected);
+    $monitor("%10d    0x%02H    0x%02H    0x%02H    0x%02H    0x%02H", $time, ula_op, a, b, result,
+             expected);
 
     $display("\n### Test: not");
     $display("--------------------------------------------------------------------------------");
-    op = 8'd0;
+    $display("%10s %8s %5s %7s  %8s %8s", "TIME", "ULA_OP", "A", "B", "RESULT", "EXPECTED");
+    ula_op = 8'd0;
     a = 8'd255;
     b = 8'd0;
     expected = 8'd255;
@@ -43,7 +45,8 @@ module ula_TB ();
 
     $display("\n### Test: and");
     $display("--------------------------------------------------------------------------------");
-    op = 8'd1;
+    $display("%8s %8s %5s %7s  %8s %8s", "TIME", "ULA_OP", "A", "B", "RESULT", "EXPECTED");
+    ula_op = 8'd1;
     a = 8'd0;
     b = 8'd255;
     expected = 8'd0;
@@ -67,7 +70,8 @@ module ula_TB ();
 
     $display("\n### Test: or");
     $display("--------------------------------------------------------------------------------");
-    op = 8'd2;
+    $display("%8s %8s %5s %7s  %8s %8s", "TIME", "ULA_OP", "A", "B", "RESULT", "EXPECTED");
+    ula_op = 8'd2;
     a = 8'd0;
     b = 8'd255;
     expected = 8'd255;
@@ -87,7 +91,8 @@ module ula_TB ();
 
     $display("\n### Test: xor");
     $display("--------------------------------------------------------------------------------");
-    op = 8'd3;
+    $display("%8s %8s %5s %7s  %8s %8s", "TIME", "ULA_OP", "A", "B", "RESULT", "EXPECTED");
+    ula_op = 8'd3;
     a = 8'd0;
     b = 8'd0;
     expected = 8'd0;
@@ -112,7 +117,8 @@ module ula_TB ();
 
     $display("\n### Test: add");
     $display("--------------------------------------------------------------------------------");
-    op = 8'd4;
+    $display("%8s %8s %5s %7s  %8s %8s", "TIME", "ULA_OP", "A", "B", "RESULT", "EXPECTED");
+    ula_op = 8'd4;
     a = 8'd0;
     b = 8'd0;
     expected = 8'd0;
@@ -132,7 +138,8 @@ module ula_TB ();
 
     $display("\n### Test: sub");
     $display("--------------------------------------------------------------------------------");
-    op = 8'd5;
+    $display("%8s %8s %5s %7s  %8s %8s", "TIME", "ULA_OP", "A", "B", "RESULT", "EXPECTED");
+    ula_op = 8'd5;
     a = 8'd0;
     b = 8'd0;
     expected = 8'd0;
@@ -167,7 +174,8 @@ module ula_TB ();
 
     $display("\n### Test: left shift");
     $display("--------------------------------------------------------------------------------");
-    op = 8'd6;
+    $display("%8s %8s %5s %7s  %8s %8s", "TIME", "ULA_OP", "A", "B", "RESULT", "EXPECTED");
+    ula_op = 8'd6;
     a = 8'd0;
     b = 8'd0;
     expected = 8'd0;
@@ -195,7 +203,8 @@ module ula_TB ();
 
     $display("\n### Test: right shift");
     $display("--------------------------------------------------------------------------------");
-    op = 8'd7;
+    $display("%8s %8s %5s %7s  %8s %8s", "TIME", "ULA_OP", "A", "B", "RESULT", "EXPECTED");
+    ula_op = 8'd7;
     a = 8'd0;
     b = 8'd0;
     expected = 8'd0;
@@ -220,6 +229,8 @@ module ula_TB ();
     b = 8'd2;
     expected = 8'd63;
     `ASSERT(result, expected);
+
+    $display();
+    $finish();
   end
 endmodule
-;

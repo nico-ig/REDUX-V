@@ -1,11 +1,9 @@
 `include "utils.vh"
 
-`timescale 1ns / 1ps
-
 module ula_sub_TB ();
   reg  [`BITS-1:0] a;
   reg  [`BITS-1:0] b;
-  reg  [  `OP-1:0] op;
+  reg  [  `ULA_OP-1:0] ula_op;
   wire [`BITS-1:0] result;
   reg  [`BITS-1:0] expected;
 
@@ -14,23 +12,27 @@ module ula_sub_TB ();
     $dumpvars(0, ula_sub_TB);
   end
 
-  ula DUT (
+  ula #(
+      .ULA_OP(`ULA_OP),
+      .BITS  (`BITS)
+  ) DUT (
       .a_in(a),
       .b_in(b),
-      .op_in(op),
+      .ula_op_in(ula_op),
       .result_out(result)
   );
 
   initial begin
-    $monitor("\ttime=%3d, op=0x%02H, a=0x%02H, b=0x%02H, result=0x%02H, expected=0x%02H", $time,
-             op, a, b, result, expected);
+    $monitor("%10d    0x%02H    0x%02H    0x%02H    0x%02H    0x%02H", $time, ula_op, a, b, result,
+             expected);
 
     $display("\n### Test: sub");
     $display("--------------------------------------------------------------------------------");
-    op = 8'd5;
+    ula_op = 8'd5;
 
     for (reg [8:0] a_ = 8'd0; a_ < 9'd256; a_ = a_ + 8'd1) begin
       $display();
+      $display("%10s %8s %5s %7s  %8s %8s", "TIME", "ULA_OP", "A", "B", "RESULT", "EXPECTED");
       a = a_;
       for (reg [8:0] b_ = 8'd0; b_ < 9'd256; b_ = b_ + 8'd1) begin
         b = b_;
@@ -38,6 +40,7 @@ module ula_sub_TB ();
         `ASSERT(result, expected);
       end
     end
+    $display();
+    $finish();
   end
 endmodule
-;

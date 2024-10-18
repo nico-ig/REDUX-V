@@ -1,16 +1,24 @@
 `ifndef __UTILS__
 `define __UTILS__
 
-`timescale 1ns / 1ps
+
+`timescale 1fs / 1fs
+`define CLK 8
+`define HALF_CLK 4
+`define HALF_HALF_CLK 2
 
 `define ASSERT(signal, value) \
-  #10; \
+  #1; \
   if (signal !== value) begin \
-    $display("ASSERTION FAILED in %m: expected: %b, actual is : %b", value, signal); \
-    $finish; \
+    $fatal(0, "ASSERTION FAILED -- expected: 0x%02H, actual: 0x%02H", value, signal); \
   end \
 
-`define OP 3
 `define BITS 8
+`define OP 4
+`define ULA_OP 3
+`define REG_BITS 2
+`define REG_SIZE 4
+`define MEMORY_BITS 8
+`define MEMORY_SIZE 256
 
 `endif

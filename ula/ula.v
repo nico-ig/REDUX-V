@@ -1,14 +1,14 @@
 module ula #(
-    parameter integer OP   = 3,
+    parameter integer ULA_OP = 3,
     parameter integer BITS = 8
 ) (
-    input wire [OP-1:0] op_in,
-    input wire [BITS-1:0] a_in,
-    input wire [BITS-1:0] b_in,
-    output reg [BITS-1:0] result_out
+    input  wire [ULA_OP-1:0] ula_op_in,
+    input  wire [  BITS-1:0] a_in,
+    input  wire [  BITS-1:0] b_in,
+    output reg  [  BITS-1:0] result_out
 );
-  always @(op_in, a_in, b_in) begin
-    case (op_in)
+  always @(ula_op_in, a_in, b_in) begin
+    case (ula_op_in)
       3'b000:  result_out = ~b_in;
       3'b001:  result_out = a_in & b_in;
       3'b010:  result_out = a_in | b_in;
@@ -21,4 +21,3 @@ module ula #(
     endcase
   end
 endmodule
-;
