@@ -8,7 +8,7 @@ module control_unit #(
     output reg [`ULA_OP - 1: 0] ula_op
 );
 
-  wire [0:9] op_signals [0 : (1 << `OP)];
+  wire [9 : 0] op_signals [0 : (1 << `OP)];
   wire [`ULA_OP - 1 : 0] op_ula_op [0 : (1 << `ULA_OP)];
 
   assign op_signals[`BRZR] = 1 << `BR;

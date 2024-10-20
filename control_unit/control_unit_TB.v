@@ -2,10 +2,10 @@
 
 module control_unit_TB ();
     reg [`OP - 1 : 0] op;
-    wire [0:9] signals;
+    wire [9 : 0] signals;
     wire [`ULA_OP - 1: 0] ula_op;
-    reg [0:9] signals_expected;
-    reg [0:9] op_expected_signals [0 : (1 << `OP)];
+    reg [9 : 0] signals_expected;
+    reg [9 : 0] op_expected_signals [0 : (1 << `OP)];
     reg [`ULA_OP - 1: 0] ula_op_expected;
     reg [`ULA_OP - 1: 0] op_expected_ula_op[0 : (1 << `ULA_OP)];
 

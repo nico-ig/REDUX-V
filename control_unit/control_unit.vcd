@@ -1,5 +1,5 @@
 $date
-	Sat Oct 19 23:45:47 2024
+	Sun Oct 20 02:00:34 2024
 $end
 $version
 	Icarus Verilog
@@ -9,9 +9,9 @@ $timescale
 $end
 $scope module control_unit_TB $end
 $var wire 3 ! ula_op [2:0] $end
-$var wire 10 " signals [0:9] $end
+$var wire 10 " signals [9:0] $end
 $var reg 4 # op [3:0] $end
-$var reg 10 $ signals_expected [0:9] $end
+$var reg 10 $ signals_expected [9:0] $end
 $var reg 3 % ula_op_expected [2:0] $end
 $scope module DUT $end
 $var wire 4 & op [3:0] $end
