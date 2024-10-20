@@ -7,9 +7,7 @@ module instruction_memory_TB ();
   reg [`BITS-1:0] irom_TB[0:`MEMORY_SIZE-1];
 
   reg clk;
-  reg write_enable;
   reg [`BITS-1:0] pc;
-  reg [`BITS-1:0] expected;
   wire [`BITS-1:0] instruction;
 
   instruction_memory #(
@@ -46,19 +44,28 @@ module instruction_memory_TB ();
 
   initial begin
     $monitor("%10d    0x%02H    0x%02H    0x%02H      0x%02H", $time, clk, pc, instruction,
-             expected);
+             data);
 
     $display("\n### Test: instruction memory");
     $display("--------------------------------------------------------------------------------");
     $display("%10s %7s %6s %8s %7s", "TIME", "CLK", "PC", "INSTRUCTION", "EXPECTED");
 
     clk = 1'd0;
+    pc = 8'd255;
   end
 
   always #`HALF_CLK clk = !clk;
 
   always @(clk) begin
-
+    if (clk == 1'd0) begin
+      pc = pc + 1'd1;
+      data = irom_TB[pc];
+  end else begin
+    `ASSERT(instruction, data);
+    if (pc == 8'd255) begin
+      $display();
+      $finish();
+    end
   end
-
+  end
 endmodule
