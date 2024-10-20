@@ -1,39 +1,49 @@
+`include "utils.vh"
+
 module control_unit #(
     parameter integer OP = 4
 ) (
-    input reg [OP - 1 : 0] op,
-    output reg signals[0:9],
-    output reg [ALU_OP - 1: 0] alu_op
+    input wire [OP - 1: 0] op,
+    output reg [0:9] signals,
+    output reg [`ULA_OP - 1: 0] ula_op
 );
 
+  wire [0:9] op_signals [0 : (1 << `OP)];
+  wire [`ULA_OP - 1 : 0] op_ula_op [0 : (1 << `ULA_OP)];
+
+  assign op_signals[`BRZR] = 1 << `BR;
+  assign op_signals[`JI] = 1 << `J;
+  assign op_signals[`LD] = (1 << `RA) | (1 << `RE) | (1 << `DM);
+  assign op_signals[`ST] = 1 << `WE;
+  assign op_signals[`ADDI] = (1 << `RA) | (1 << `SE) | (1 << `RE);
+  assign op_signals[`PUSH] = (1 << `RA) | (1 << `RE) | (1 << `WE) | (1 << `DM) | (1 << `SP);
+  assign op_signals[`POP] = (1 << `RE) | (1 << `DM) | (1 << `SP) | (1 << `SPR);
+  assign op_signals[`MOV] = 1 << `RE;
+  assign op_signals[`NOT] = 1 << `RE;
+  assign op_signals[`AND] = 1 << `RE;
+  assign op_signals[`OR] = 1 << `RE;
+  assign op_signals[`XOR] = 1 << `RE;
+  assign op_signals[`ADD] = 1 << `RE;
+  assign op_signals[`SUB] = 1 << `RE;
+  assign op_signals[`SLR] = 1 << `RE;
+  assign op_signals[`SRR] = 1 << `RE;
+
+  assign op_ula_op[`NOT & ~(1 << `ULA_OP)] = `NOT;
+  assign op_ula_op[`AND & ~(1 << `ULA_OP)] = `AND;
+  assign op_ula_op[`OR & ~(1 << `ULA_OP)] = `OR;
+  assign op_ula_op[`XOR & ~(1 << `ULA_OP)] = `XOR;
+  assign op_ula_op[`ADD & ~(1 << `ULA_OP)] = `ADD;
+  assign op_ula_op[`SUB & ~(1 << `ULA_OP)] = `SUB;
+  assign op_ula_op[`SLR & ~(1 << `ULA_OP)] = `SLR;
+  assign op_ula_op[`SRR & ~(1 << `ULA_OP)] = `SRR;
+
   always @* begin
-    //zerar todos de algum jeito antes
-    case (op)
-      BRZR: signals[BR] = 1'd1;
-      JI: signals[J] = 1'd1;
-      LD: begin
-        signals[RA] = 1'd1;
-        signals[RE] = 1'd1;
-        signals[DM] = 1'd1;
-      end
-      ST: signals[WE] = 1'd1;
-      ADDI: begin
-        signals[RA] = 1'd1;
-        signals[SE] = 1'd1;
-        signals[RE] = 1'd1;
-      end
-      PUSH: ;
-      POP: ;
-      MOV: ;
-      NOT: ;
-      AND: ;
-      OR: ;
-      XOR: ;
-      ADD: ;
-      SUB: ;
-      SLR: ;
-      SRR: ;
-      default: ;
-    endcase
+    signals = 0;
+    ula_op = 0;
+
+    signals = op_signals[op];
+
+    if (op == `ADDI || op >= `NOT)
+      ula_op = op_ula_op[op & ~(1 << `ULA_OP)];
   end
 endmodule
