@@ -19,7 +19,6 @@ module reg_bank_TB ();
 
   reg_bank #(
       .BITS(`BITS),
-      .REG_BITS(`REG_BITS),
       .REG_SIZE(`REG_SIZE)
   ) DUT (
       .clk(clk),
@@ -76,4 +75,3 @@ module reg_bank_TB ();
     end
   end
 endmodule
-;

@@ -59,7 +59,7 @@ module instruction_memory_TB ();
   always @(clk) begin
     if (clk == 1'd0) begin
       pc = pc + 1'd1;
-      data = irom_TB[pc];
+      data = ^irom_TB[pc] === 1'bx ? 0 : irom_TB[pc];
   end else begin
     `ASSERT(instruction, data);
     if (pc == 8'd255) begin

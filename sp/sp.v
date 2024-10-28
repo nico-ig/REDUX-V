@@ -7,13 +7,14 @@ module sp #(
   output reg [BITS - 1 : 0] sp
 );
 
-  reg [BITS-1:0] reg_sp = 0;
+  initial sp = 0;
+  reg [BITS:0] reg_sp = 0;
+  always @(posedge (clk)) sp = reg_sp === {BITS{1'd0}} ? reg_sp : (reg_sp - 1'd1) & {BITS{1'd1}};
 
-  always @(posedge (clk)) begin
-    if (write_enable == 1'd1) begin
-      if (op == 1 && reg_sp < ((1 << BITS) - 1)) reg_sp <= reg_sp + 1;
-      else if (op == 0 && reg_sp > 0) reg_sp <= reg_sp - 1;
+  always @(negedge (clk)) begin
+    if (write_enable) begin
+      if (op && reg_sp <= ((1'd1 << BITS) - 1'd1)) reg_sp = reg_sp + 1'd1;
+      else if (!op && reg_sp > 1'd0) reg_sp = reg_sp - 1'd1;
     end
-    sp <= reg_sp;
   end
 endmodule

@@ -31,28 +31,32 @@ module sp_TB ();
     $display("%10s %7s %6s %7s %7s   %8s", "TIME", "CLK", "WE", "OP", "SP", "EXPECTED");
 
     clk = 1'd0;
-    write_enable = 1'b0;
+    write_enable = 1'd0;
     op = 1'd1;
     expected = 8'd0;
   end
 
+  integer cnt = 0;
+
   always @(clk) begin
-    if (clk == 0) begin
-      if (write_enable == 1'd1) begin
-          expected = op == 1'd1 ? expected + 1 : expected - 1;
-        if (expected == 8'd0 && op == 1'd1) begin
-          expected = expected - 1;
-          op = !op;
-          $display();
-          $display("%10s %7s %6s %7s %7s   %8s", "TIME", "CLK", "WE", "OP", "SP", "EXPECTED");
-        end else if (expected == 8'd255 && op == 1'd0) begin
-          $display();
-          $finish;
-        end
+    if (clk == 1) begin
+        if (write_enable == 1'd1 && cnt >= 3) begin
+            expected = op == 1'd1 ? expected + 1 : expected - 1;
+          if (expected == 8'd0 && op == 1'd1) begin
+            expected = expected - 1;
+            op = !op;
+            $display();
+            $display("%10s %7s %6s %7s %7s   %8s", "TIME", "CLK", "WE", "OP", "SP", "EXPECTED");
+          end else if (expected == 8'd0 && op == 1'd0) begin
+            $display();
+            $finish;
+          end
       end
       write_enable = !write_enable;
     end else begin
-        `ASSERT(sp, expected);
+      `ASSERT(sp, expected);
+      cnt = cnt + 1;
     end
+
   end
 endmodule

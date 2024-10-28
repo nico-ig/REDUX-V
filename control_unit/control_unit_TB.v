@@ -28,22 +28,22 @@ module control_unit_TB ();
     $display("%10s %6s   %8s %7s %7s   %8s", "TIME", "OP", "SIGNALS", "S_EXP", "ULA_OP", "ULA_EXP ");
     $monitor("%10d    0x%02H    0x%02H    0x%02H    0x%02H    0x%02H", $time, op, signals, signals_expected, ula_op, ula_op_expected);
 
-    op_expected_signals[`BRZR] = 1 << `BR;
+    op_expected_signals[`BRZR] = (1 << `BR) | (1 << `RA);
     op_expected_signals[`JI] = 1 << `J;
     op_expected_signals[`LD] = (1 << `RA) | (1 << `RE) | (1 << `DM);
     op_expected_signals[`ST] = 1 << `WE;
-    op_expected_signals[`ADDI] = (1 << `RA) | (1 << `SE) | (1 << `RE);
-    op_expected_signals[`PUSH] = (1 << `RA) | (1 << `RE) | (1 << `WE) | (1 << `DM) | (1 << `SP);
-    op_expected_signals[`POP] = (1 << `RE) | (1 << `DM) | (1 << `SP) | (1 << `SPR);
-    op_expected_signals[`MOV] = 1 << `RE;
-    op_expected_signals[`NOT] = 1 << `RE;
-    op_expected_signals[`AND] = 1 << `RE;
-    op_expected_signals[`OR] = 1 << `RE;
-    op_expected_signals[`XOR] = 1 << `RE;
-    op_expected_signals[`ADD] = 1 << `RE;
-    op_expected_signals[`SUB] = 1 << `RE;
-    op_expected_signals[`SLR] = 1 << `RE;
-    op_expected_signals[`SRR] = 1 << `RE;
+    op_expected_signals[`ADDI] = (1 << `SE) | (1 << `RE);
+    op_expected_signals[`PUSH] = (1 << `RA) | (1 << `RE) | (1 << `WE) | (1 << `DM) | (1 << `SP) | (1 << `SPR);
+    op_expected_signals[`POP] = (1 << `RA) | (1 << `RE) | (1 << `DM) | (1 << `SP);
+    op_expected_signals[`MOV] = (1 << `RA) | (1 << `RE) | (1 << `RD);
+    op_expected_signals[`NOT] = (1 << `RA) | (1 << `RE);
+    op_expected_signals[`AND] = (1 << `RA) | (1 << `RE);
+    op_expected_signals[`OR] = (1 << `RA) | (1 << `RE);
+    op_expected_signals[`XOR] = (1 << `RA) | (1 << `RE);
+    op_expected_signals[`ADD] = (1 << `RA) | (1 << `RE);
+    op_expected_signals[`SUB] = (1 << `RA) | (1 << `RE);
+    op_expected_signals[`SLR] = (1 << `RA) | (1 << `RE);
+    op_expected_signals[`SRR] = (1 << `RA) | (1 << `RE);
 
     op_expected_ula_op[`NOT & ~(1 << `ULA_OP)] = `NOT;
     op_expected_ula_op[`AND & ~(1 << `ULA_OP)] = `AND;
@@ -57,7 +57,7 @@ module control_unit_TB ();
     for (integer unsigned i = 0; i < (1 << `OP); i++) begin
       op = i;
       signals_expected = op_expected_signals[i];
-      ula_op_expected = (i == `ADDI || i >= `NOT) ? op_expected_ula_op[i & ~(1 << `ULA_OP)] : 0;
+      ula_op_expected = (i == `ADDI || i >= `NOT) ? op_expected_ula_op[i & ~(1 << `ULA_OP)] : op & 3'b111;
 
       `ASSERT(signals, signals_expected);
       `ASSERT(ula_op, ula_op_expected);

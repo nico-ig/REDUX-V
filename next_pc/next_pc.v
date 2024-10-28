@@ -8,8 +8,9 @@ module next_pc #(
     input wire [BITS-1:0] pc,
     output reg [BITS-1:0] next_pc
 );
+  initial next_pc = 0;
 
-  always @(brzr_sel, jmp_sel) begin
+  always @* begin
     case ({
       brzr_sel, jmp_sel
     })

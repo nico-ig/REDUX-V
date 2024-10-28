@@ -11,12 +11,16 @@ module data_memory #(
 
   reg [MEMORY_BITS-1:0] dram[0:MEMORY_SIZE-1];
 
+  initial data_out = 0;
+
   always @(negedge (clk)) begin
-    if (write_enable == 1'b0) data_out = dram[address];
+    data_out = write_enable === 1'b0 ? ^dram[address] === 1'bx ? 0 : dram[address] : data_out;
   end
 
   always @(posedge (clk)) begin
-    if (write_enable == 1'b1) dram[address] = data_in;
+    if (write_enable === 1'b1) dram[address] = data_in;
   end
 
 endmodule
+
+

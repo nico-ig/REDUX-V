@@ -7,6 +7,8 @@ module ula #(
     input  wire [  BITS-1:0] b_in,
     output reg  [  BITS-1:0] result_out
 );
+  initial result_out = 0;
+
   always @(ula_op_in, a_in, b_in) begin
     case (ula_op_in)
       3'b000:  result_out = ~b_in;

@@ -14,7 +14,8 @@ module instruction_memory #(
   end
 
   always @(posedge (clk)) begin
-    instruction = irom[pc];
+    if (^irom[pc] === 1'bx) instruction = 0;
+    else instruction = irom[pc];
   end
 
 endmodule

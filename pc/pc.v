@@ -6,7 +6,9 @@ module pc #(
     output reg [BITS-1:0] pc
 );
 
-  always @(posedge (clk)) begin
+  initial pc = 0;
+
+  always @(negedge (clk)) begin
     pc <= next_pc;
   end
 endmodule
